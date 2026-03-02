@@ -6,7 +6,7 @@ import { buildWorkerArgv, validateCliAvailable, getWorkerEnv as getModelWorkerEn
 import { validateTeamName } from './team-name.js';
 import {
   createTeamSession, spawnWorkerInPane, sendToWorker,
-  isWorkerAlive, killTeamSession,
+  isWorkerAlive, killTeamSession, waitForPaneReady,
   type TeamSession, type WorkerPaneConfig,
 } from './tmux-session.js';
 import {
@@ -704,9 +704,15 @@ export async function spawnWorkerForTask(
   }
 
   if (!usePromptMode) {
-    // Interactive mode: wait for CLI startup, handle trust-confirm, then
+    // Interactive mode: wait for pane readiness, handle trust-confirm, then
     // send instruction via tmux send-keys.
-    await new Promise(r => setTimeout(r, 4000));
+    const paneReady = await waitForPaneReady(paneId);
+    if (!paneReady) {
+      await killWorkerPane(runtime, workerNameValue, paneId);
+      await resetTaskToPending(root, taskId);
+      throw new Error(`worker_pane_not_ready:${workerNameValue}`);
+    }
+
     if (agentType === 'gemini') {
       const confirmed = await notifyPaneWithRetry(runtime.sessionName, paneId, '1');
       if (!confirmed) {
