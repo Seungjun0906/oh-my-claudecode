@@ -124,4 +124,25 @@ export declare function getReplyListenerPlatformConfig(config: NotificationConfi
  * SECURITY: Logs warning when Discord bot is enabled but authorizedDiscordUserIds is empty.
  */
 export declare function getReplyConfig(): import("./types.js").ReplyConfig | null;
+import type { CustomIntegration, CustomIntegrationsConfig } from "./types.js";
+/**
+ * Detect if legacy OpenClaw configuration exists.
+ */
+export declare function detectLegacyOpenClawConfig(): boolean;
+/**
+ * Read and migrate legacy OpenClaw config to new custom integration format.
+ */
+export declare function migrateLegacyOpenClawConfig(): CustomIntegration | null;
+/**
+ * Read custom integrations configuration from .omc-config.json.
+ */
+export declare function getCustomIntegrationsConfig(): CustomIntegrationsConfig | null;
+/**
+ * Get all custom integrations enabled for a specific event.
+ */
+export declare function getCustomIntegrationsForEvent(event: string): CustomIntegration[];
+/**
+ * Check if custom integrations are enabled (globally or for a specific event).
+ */
+export declare function hasCustomIntegrationsEnabled(event?: string): boolean;
 //# sourceMappingURL=config.d.ts.map

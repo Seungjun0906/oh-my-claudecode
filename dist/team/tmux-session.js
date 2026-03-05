@@ -106,10 +106,11 @@ export function buildWorkerStartCommand(config) {
             return `${key}=${shellEscape(value)}`;
         });
         const shellName = shellNameFromPath(shell) || 'bash';
+        const execArgsCommand = shellName === 'fish' ? 'exec $argv' : 'exec "$@"';
         const rcFile = process.env.HOME ? `${process.env.HOME}/.${shellName}rc` : '';
         const script = shouldSourceRc && rcFile
-            ? `[ -f ${shellEscape(rcFile)} ] && . ${shellEscape(rcFile)}; exec "$@"`
-            : 'exec "$@"';
+            ? `[ -f ${shellEscape(rcFile)} ] && . ${shellEscape(rcFile)}; ${execArgsCommand}`
+            : execArgsCommand;
         return [
             'env',
             ...envAssignments,

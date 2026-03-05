@@ -23,6 +23,7 @@
     "bridge/mcp-server.cjs",
     "bridge/team-bridge.cjs",
     "bridge/team-mcp.cjs",
+    "bridge/team.js",
     "bridge/cli.cjs",
     "bridge/runtime-cli.cjs",
     "commands",
